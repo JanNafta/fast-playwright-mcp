@@ -4,11 +4,12 @@ import { elementSelectorSchema } from '../types/selectors.js';
 import { formatObject } from '../utils/codegen.js';
 import {
   handleSnapshotExpectation,
-  resolveDragElements,
   resolveFirstElement,
 } from './shared-element-utils.js';
 import { defineTabTool, defineTool } from './tool.js';
 import { generateLocator } from './utils.js';
+
+// LinkedIn Lite: Removed drag (not needed for LinkedIn posting)
 
 const snapshot = defineTool({
   capability: 'core',
@@ -64,6 +65,7 @@ const clickSchema = z.object({
     'Page state capture config. Use batch_execute for multi-clicks'
   ),
 });
+
 const click = defineTabTool({
   capability: 'core',
   schema: {
@@ -104,41 +106,7 @@ const click = defineTabTool({
     await handleSnapshotExpectation(tab, params.expectation, response);
   },
 });
-const drag = defineTabTool({
-  capability: 'core',
-  schema: {
-    name: 'browser_drag',
-    title: 'Drag mouse',
-    description: 'Perform drag and drop between two elements',
-    inputSchema: z.object({
-      startSelectors: selectorsSchema.describe(
-        'Source element selectors for drag start'
-      ),
-      endSelectors: selectorsSchema.describe(
-        'Target element selectors for drag end'
-      ),
-      expectation: expectationSchema.describe(
-        'Page state after drag. Use batch_execute for workflows'
-      ),
-    }),
-    type: 'destructive',
-  },
-  handle: async (tab, params, response) => {
-    const { startLocator, endLocator } = await resolveDragElements(
-      tab,
-      params.startSelectors,
-      params.endSelectors
-    );
 
-    await tab.waitForCompletion(async () => {
-      await startLocator.dragTo(endLocator);
-    });
-
-    response.addCode(
-      `await page.${await generateLocator(startLocator)}.dragTo(page.${await generateLocator(endLocator)});`
-    );
-  },
-});
 const hover = defineTabTool({
   capability: 'core',
   schema: {
@@ -163,6 +131,7 @@ const hover = defineTabTool({
     });
   },
 });
+
 const selectOptionSchema = z.object({
   selectors: selectorsSchema,
   values: z.array(z.string()).describe('Values to select (array)'),
@@ -170,6 +139,7 @@ const selectOptionSchema = z.object({
     'Page state after selection. Use batch_execute for forms'
   ),
 });
+
 const selectOption = defineTabTool({
   capability: 'core',
   schema: {
@@ -191,4 +161,5 @@ const selectOption = defineTabTool({
     });
   },
 });
-export default [snapshot, click, drag, hover, selectOption];
+
+export default [snapshot, click, hover, selectOption];

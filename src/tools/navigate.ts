@@ -1,12 +1,9 @@
 import { z } from 'zod';
 import { expectationSchema } from '../schemas/expectation.js';
-import {
-  generateBackCode,
-  generateForwardCode,
-  generateNavigationCode,
-} from '../utils/common-formatters.js';
-import { defineTabTool, defineTool } from './tool.js';
+import { generateNavigationCode } from '../utils/common-formatters.js';
+import { defineTool } from './tool.js';
 
+// LinkedIn Lite: Only browser_navigate (goBack, goForward removed)
 const navigate = defineTool({
   capability: 'core',
   schema: {
@@ -25,36 +22,5 @@ const navigate = defineTool({
     response.addCode(generateNavigationCode(params.url));
   },
 });
-const goBack = defineTabTool({
-  capability: 'core',
-  schema: {
-    name: 'browser_navigate_back',
-    title: 'Go back to previous page',
-    description: 'Go back to previous page',
-    inputSchema: z.object({
-      expectation: expectationSchema.describe('Page state after going back'),
-    }),
-    type: 'readOnly',
-  },
-  handle: async (tab, _params, response) => {
-    await tab.page.goBack();
-    response.addCode(generateBackCode());
-  },
-});
-const goForward = defineTabTool({
-  capability: 'core',
-  schema: {
-    name: 'browser_navigate_forward',
-    title: 'Go forward to next page',
-    description: 'Go forward to next page',
-    inputSchema: z.object({
-      expectation: expectationSchema.describe('Page state after going forward'),
-    }),
-    type: 'readOnly',
-  },
-  handle: async (tab, _params, response) => {
-    await tab.page.goForward();
-    response.addCode(generateForwardCode());
-  },
-});
-export default [navigate, goBack, goForward];
+
+export default [navigate];

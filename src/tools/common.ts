@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { expectationSchema } from '../schemas/expectation.js';
-import { defineTabTool, defineTool } from './tool.js';
+import { defineTool } from './tool.js';
 
+// LinkedIn Lite: Only browser_close (resize removed - viewport set via config)
 const close = defineTool({
   capability: 'core',
   schema: {
@@ -17,29 +17,5 @@ const close = defineTool({
     response.addCode('await page.close()');
   },
 });
-const resize = defineTabTool({
-  capability: 'core',
-  schema: {
-    name: 'browser_resize',
-    title: 'Resize browser window',
-    description: 'Resize the browser window',
-    inputSchema: z.object({
-      width: z.number().describe('Width of the browser window'),
-      height: z.number().describe('Height of the browser window'),
-      expectation: expectationSchema,
-    }),
-    type: 'readOnly',
-  },
-  handle: async (tab, params, response) => {
-    response.addCode(
-      `await page.setViewportSize({ width: ${params.width}, height: ${params.height} });`
-    );
-    await tab.waitForCompletion(async () => {
-      await tab.page.setViewportSize({
-        width: params.width,
-        height: params.height,
-      });
-    });
-  },
-});
-export default [close, resize];
+
+export default [close];
