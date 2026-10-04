@@ -60,7 +60,8 @@ This repo is **archived** and no longer maintained. It served as a proof-of-conc
 
 ## Author
 
-**Jan Naftanaila** -- Media Buyer & AI Automation Specialist
+**Jan Nafta**, performance marketer and user acquisition consultant. Founder of [Digital Nafta](https://digitalnafta.com).
 
 - GitHub: [@JanNafta](https://github.com/JanNafta)
-- LinkedIn: [jannafta](https://www.linkedin.com/in/jannafta/)
+- LinkedIn: [Jan Nafta](https://www.linkedin.com/in/jannafta-programmatic-performance-dsp-ssp-rtb/)
+- Website: [jannafta.com](https://jannafta.com)
